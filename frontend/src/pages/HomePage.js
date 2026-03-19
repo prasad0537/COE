@@ -5,7 +5,7 @@ import JsonPreview from "../components/JsonPreview";
 import ResumeMatchPanel from "../components/ResumeMatchPanel";
 import SkillTable from "../components/SkillTable";
 import SummaryCards from "../components/SummaryCards";
-import { fetchSampleDescription, matchResumeSkills, predictSkills } from "../services/api";
+import { extractDocumentText, fetchSampleDescription, matchResumeSkills, predictSkills } from "../services/api";
 
 function buildCategoryCounts(skills) {
   return skills.reduce((accumulator, skill) => {
@@ -18,6 +18,8 @@ function buildCategoryCounts(skills) {
 function HomePage() {
   const [text, setText] = useState("");
   const [resumeText, setResumeText] = useState("");
+  const [jobFileName, setJobFileName] = useState("");
+  const [resumeFileName, setResumeFileName] = useState("");
   const [threshold, setThreshold] = useState("");
   const [topK, setTopK] = useState("12");
   const [minPredictions, setMinPredictions] = useState("5");
@@ -27,6 +29,8 @@ function HomePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMatching, setIsMatching] = useState(false);
   const [isLoadingSample, setIsLoadingSample] = useState(false);
+  const [isUploadingJob, setIsUploadingJob] = useState(false);
+  const [isUploadingResume, setIsUploadingResume] = useState(false);
 
   async function handleSubmit() {
     if (!text.trim()) {
@@ -59,10 +63,43 @@ function HomePage() {
     try {
       const sample = await fetchSampleDescription();
       setText(sample);
+      setJobFileName("");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
       setIsLoadingSample(false);
+    }
+  }
+
+  async function handleDocumentUpload(file, target) {
+    if (!file) {
+      return;
+    }
+
+    setError("");
+    if (target === "job") {
+      setIsUploadingJob(true);
+    } else {
+      setIsUploadingResume(true);
+    }
+
+    try {
+      const payload = await extractDocumentText(file);
+      if (target === "job") {
+        setText(payload.text || "");
+        setJobFileName(payload.filename || file.name);
+      } else {
+        setResumeText(payload.text || "");
+        setResumeFileName(payload.filename || file.name);
+      }
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      if (target === "job") {
+        setIsUploadingJob(false);
+      } else {
+        setIsUploadingResume(false);
+      }
     }
   }
 
@@ -73,7 +110,7 @@ function HomePage() {
     }
 
     if (!resumeText.trim()) {
-      setError("Resume text is empty. Paste the candidate resume or upload a text file.");
+      setError("Resume text is empty. Paste the candidate resume or upload a TXT, PDF, or DOCX file.");
       return;
     }
 
@@ -99,6 +136,8 @@ function HomePage() {
   function handleClear() {
     setText("");
     setResumeText("");
+    setJobFileName("");
+    setResumeFileName("");
     setResult(null);
     setError("");
   }
@@ -139,6 +178,8 @@ function HomePage() {
           <InputPanel
             text={text}
             resumeText={resumeText}
+            jobFileName={jobFileName}
+            resumeFileName={resumeFileName}
             threshold={threshold}
             topK={topK}
             minPredictions={minPredictions}
@@ -146,12 +187,16 @@ function HomePage() {
             isSubmitting={isSubmitting}
             isMatching={isMatching}
             isLoadingSample={isLoadingSample}
+            isUploadingJob={isUploadingJob}
+            isUploadingResume={isUploadingResume}
             onTextChange={setText}
             onResumeTextChange={setResumeText}
             onThresholdChange={setThreshold}
             onTopKChange={setTopK}
             onMinPredictionsChange={setMinPredictions}
             onShowJsonChange={setShowJson}
+            onImportJobFile={(file) => handleDocumentUpload(file, "job")}
+            onImportResumeFile={(file) => handleDocumentUpload(file, "resume")}
             onLoadSample={handleLoadSample}
             onSubmit={handleSubmit}
             onMatch={handleMatch}

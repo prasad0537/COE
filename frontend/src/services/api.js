@@ -8,6 +8,19 @@ Required experience includes Spark, data modeling, and working with PostgreSQL o
 You will collaborate with cross-functional stakeholders and communicate findings clearly.
 Nice to have: Terraform, Tableau, and mentoring junior engineers.`;
 
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  let binary = "";
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    const chunk = bytes.subarray(index, index + chunkSize);
+    binary += String.fromCharCode(...chunk);
+  }
+
+  return window.btoa(binary);
+}
+
 async function request(path, options = {}) {
   let response;
   try {
@@ -47,5 +60,29 @@ export function matchResumeSkills(payload) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(payload)
+  });
+}
+
+export async function extractDocumentText(file) {
+  if (!file) {
+    throw new Error("Choose a file first.");
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    throw new Error("Please upload a file up to 10 MB.");
+  }
+
+  const buffer = await file.arrayBuffer();
+  const contentBase64 = arrayBufferToBase64(buffer);
+
+  return request("/api/extract-document", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      filename: file.name,
+      content_base64: contentBase64
+    })
   });
 }

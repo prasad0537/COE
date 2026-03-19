@@ -23,6 +23,7 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from common import DEFAULT_MODEL_PATH, DEFAULT_SAMPLE_TEXT_PATH  # noqa: E402
+from document_parser import extract_document_text  # noqa: E402
 from resume_matcher import build_resume_match  # noqa: E402
 
 
@@ -39,6 +40,11 @@ class ResumeMatchRequest(BaseModel):
     threshold: float | None = Field(default=None, ge=0.0, le=1.0)
     top_k: int = Field(default=12, ge=1, le=50)
     min_predictions: int = Field(default=5, ge=1, le=50)
+
+
+class DocumentExtractRequest(BaseModel):
+    filename: str = Field(..., min_length=1, description="Original uploaded filename.")
+    content_base64: str = Field(..., min_length=1, description="Base64-encoded file content.")
 
 
 app = FastAPI(title="Skill Prediction API", version="1.0.0")
@@ -224,6 +230,17 @@ def match_resume(payload: ResumeMatchRequest) -> dict[str, object]:
             min_predictions=payload.min_predictions,
         )
     except FileNotFoundError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/api/extract-document")
+def extract_document(payload: DocumentExtractRequest) -> dict[str, object]:
+    try:
+        return extract_document_text(
+            filename=payload.filename,
+            content_base64=payload.content_base64,
+        )
+    except (RuntimeError, ValueError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 

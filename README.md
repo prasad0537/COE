@@ -63,12 +63,15 @@ COE/
   - `GET /api/health`
   - `GET /api/sample`
   - `POST /api/predict`
+  - `POST /api/match`
+  - `POST /api/extract-document`
 
 ### 3. React Frontend
 
 The React app in `frontend/` provides:
 
 - pasted or uploaded job description input
+- TXT, PDF, and DOCX upload support for job descriptions and resumes
 - sample text loading
 - threshold, top-k, and minimum-result controls
 - summary cards

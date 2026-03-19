@@ -1,6 +1,8 @@
 function InputPanel({
   text,
   resumeText,
+  jobFileName,
+  resumeFileName,
   threshold,
   topK,
   minPredictions,
@@ -8,25 +10,28 @@ function InputPanel({
   isSubmitting,
   isMatching,
   isLoadingSample,
+  isUploadingJob,
+  isUploadingResume,
   onTextChange,
   onResumeTextChange,
   onThresholdChange,
   onTopKChange,
   onMinPredictionsChange,
   onShowJsonChange,
+  onImportJobFile,
+  onImportResumeFile,
   onLoadSample,
   onSubmit,
   onMatch,
   onClear
 }) {
-  async function handleFileImport(event, onChange) {
+  async function handleFileImport(event, onImport) {
     const [file] = event.target.files || [];
     if (!file) {
       return;
     }
 
-    const value = await file.text();
-    onChange(value);
+    onImport(file);
     event.target.value = "";
   }
 
@@ -36,7 +41,7 @@ function InputPanel({
         <p className="eyebrow">Input</p>
         <h2 className="panel-title mt-3 text-2xl">Job + Resume</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          Paste the job description and candidate resume to keep the current prediction flow and add resume matching.
+          Paste text or upload TXT, PDF, or DOCX files for the job description and candidate resume.
         </p>
       </div>
 
@@ -48,10 +53,11 @@ function InputPanel({
           <textarea
             id="job-description"
             className="field-input min-h-[360px] resize-y"
-            placeholder="Paste a job description here..."
+            placeholder="Paste a job description here or upload a TXT, PDF, or DOCX file..."
             value={text}
             onChange={(event) => onTextChange(event.target.value)}
           />
+          {jobFileName ? <p className="mt-2 text-xs font-medium text-slate-500">Loaded from: {jobFileName}</p> : null}
         </div>
 
         <div>
@@ -61,10 +67,11 @@ function InputPanel({
           <textarea
             id="candidate-resume"
             className="field-input min-h-[260px] resize-y"
-            placeholder="Paste a candidate resume here..."
+            placeholder="Paste a candidate resume here or upload a TXT, PDF, or DOCX file..."
             value={resumeText}
             onChange={(event) => onResumeTextChange(event.target.value)}
           />
+          {resumeFileName ? <p className="mt-2 text-xs font-medium text-slate-500">Loaded from: {resumeFileName}</p> : null}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -154,20 +161,32 @@ function InputPanel({
 
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="action-button cursor-pointer border border-dashed border-slate-300 bg-slate-50 text-ink hover:border-slate-400 hover:bg-white">
-            Upload Job .txt
-            <input className="hidden" type="file" accept=".txt" onChange={(event) => handleFileImport(event, onTextChange)} />
-          </label>
-
-          <label className="action-button cursor-pointer border border-dashed border-slate-300 bg-slate-50 text-ink hover:border-slate-400 hover:bg-white">
-            Upload Resume .txt
+            {isUploadingJob ? "Uploading Job File..." : "Upload Job TXT / PDF / DOCX"}
             <input
               className="hidden"
               type="file"
-              accept=".txt"
-              onChange={(event) => handleFileImport(event, onResumeTextChange)}
+              accept=".txt,.pdf,.docx,.doc"
+              disabled={isUploadingJob || isUploadingResume}
+              onChange={(event) => handleFileImport(event, onImportJobFile)}
+            />
+          </label>
+
+          <label className="action-button cursor-pointer border border-dashed border-slate-300 bg-slate-50 text-ink hover:border-slate-400 hover:bg-white">
+            {isUploadingResume ? "Uploading Resume File..." : "Upload Resume TXT / PDF / DOCX"}
+            <input
+              className="hidden"
+              type="file"
+              accept=".txt,.pdf,.docx,.doc"
+              disabled={isUploadingJob || isUploadingResume}
+              onChange={(event) => handleFileImport(event, onImportResumeFile)}
             />
           </label>
         </div>
+
+        <p className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-medium leading-5 text-slate-500">
+          Supports TXT, PDF, and DOCX uploads up to 10 MB. If you have an older Word `.doc` file, convert it to
+          `.docx` or PDF first.
+        </p>
 
         <label className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
           <input
