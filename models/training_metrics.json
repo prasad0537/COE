@@ -1,0 +1,11 @@
+{
+  "num_records": 1800,
+  "train_size": 1440,
+  "test_size": 360,
+  "num_labels": 75,
+  "threshold": 0.15,
+  "micro_f1": 0.9125,
+  "macro_f1": 0.9011,
+  "exact_match_accuracy": 0.3917,
+  "hamming_loss": 0.012
+}

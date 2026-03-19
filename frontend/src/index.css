@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply min-h-screen font-body text-ink antialiased;
+    background:
+      radial-gradient(circle at top left, rgba(251, 146, 60, 0.18), transparent 28%),
+      radial-gradient(circle at top right, rgba(15, 118, 110, 0.16), transparent 24%),
+      linear-gradient(180deg, #f8fafc 0%, #fff8ef 48%, #f4fbf9 100%);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink;
+  }
+}
+
+@layer components {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .dashboard-panel {
+    @apply rounded-[30px] border border-white/70 bg-white/80 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-orange-700;
+  }
+
+  .panel-title {
+    @apply text-lg font-semibold tracking-[-0.03em];
+  }
+
+  .field-label {
+    @apply mb-2 block text-sm font-semibold uppercase tracking-[0.18em] text-slate-500;
+  }
+
+  .field-input {
+    @apply w-full rounded-[22px] border border-slate-200 bg-white px-4 py-3 text-sm text-ink outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100;
+  }
+
+  .action-button {
+    @apply inline-flex items-center justify-center rounded-[20px] px-4 py-3 text-sm font-bold transition;
+  }
+}

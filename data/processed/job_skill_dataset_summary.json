@@ -1,0 +1,89 @@
+{
+  "num_records": 1800,
+  "num_unique_skills": 75,
+  "num_unique_categories": 10,
+  "top_skills": [
+    [
+      "Mentoring",
+      157
+    ],
+    [
+      "Spring Boot",
+      157
+    ],
+    [
+      "Integration Testing",
+      153
+    ],
+    [
+      "Snowflake",
+      151
+    ],
+    [
+      "Go",
+      148
+    ],
+    [
+      "FastAPI",
+      148
+    ],
+    [
+      "Ansible",
+      147
+    ],
+    [
+      ".NET",
+      147
+    ],
+    [
+      "Computer Vision",
+      143
+    ],
+    [
+      "Docker",
+      143
+    ]
+  ],
+  "top_categories": [
+    [
+      "Framework/Library",
+      1154
+    ],
+    [
+      "Data/AI",
+      1054
+    ],
+    [
+      "Programming Language",
+      1046
+    ],
+    [
+      "Cloud/DevOps",
+      1044
+    ],
+    [
+      "Testing/Quality",
+      800
+    ],
+    [
+      "Database",
+      774
+    ],
+    [
+      "Soft Skill",
+      752
+    ],
+    [
+      "Architecture",
+      480
+    ],
+    [
+      "Tooling",
+      343
+    ],
+    [
+      "Process",
+      240
+    ]
+  ]
+}

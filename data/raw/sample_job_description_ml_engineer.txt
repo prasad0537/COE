@@ -1,0 +1,7 @@
+Machine Learning Engineer
+
+We are hiring a Machine Learning Engineer to build and deploy predictive models for candidate skill extraction.
+The role requires strong Python and SQL skills, along with hands-on experience in Machine Learning workflows.
+Candidates should be comfortable with TensorFlow or PyTorch, model evaluation, feature engineering, and data preprocessing.
+Experience with AWS, Docker, and REST API integration is preferred for deploying models into production systems.
+You will work closely with product and engineering teams to improve accuracy, monitor model performance, and explain results to stakeholders.

@@ -1,0 +1,7 @@
+Senior Data Engineer
+
+We are looking for a Senior Data Engineer with strong Python and SQL skills to build scalable ETL pipelines.
+The candidate must have hands-on experience with AWS, Docker, Kubernetes, and CI/CD workflows.
+Required experience includes Spark, data modeling, and working with PostgreSQL or Snowflake.
+You will collaborate with cross-functional stakeholders and communicate findings clearly.
+Nice to have: Terraform, Tableau, and mentoring junior engineers.
